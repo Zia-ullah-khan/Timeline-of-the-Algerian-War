@@ -2,15 +2,11 @@
   --primary-color: #212121;
   --background-color: #111;
   --font: sans-serif;
-  --highlight-color: orangered;
-  --card-background: #333;
-  --card-hover-bg: rgba(255, 255, 255, 0.1);
 }
 
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
@@ -18,10 +14,6 @@ body {
   font-family: var(--font);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 50px 0;
-  height: 200vh;
-  overflow-x: hidden;
 }
 
 /* Timeline Container */
@@ -29,83 +21,111 @@ body {
   background: var(--primary-color);
   margin: 20px auto;
   padding: 20px;
-  position: relative;
-  width: 400px;
-  border-radius: 10px;
-  height: 100%;
-}
-
-/* Timeline Line */
-.timeline-line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 5px;
-  background-color: var(--highlight-color);
-  transform: translateX(-50%);
-  height: 100%;
-}
-
-/* Timeline Dot */
-.dot {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border: 4px solid var(--highlight-color);
-  border-radius: 50%;
-  transform: translateX(-50%);
-  transition: top 0.3s ease;
 }
 
 /* Card container */
 .card {
   position: relative;
   max-width: 400px;
-  background-color: var(--card-background);
-  border-radius: 10px;
-  margin: 50px 0;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  padding: 30px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Setting padding based on even or odd */
+/* setting padding based on even or odd */
 .card:nth-child(odd) {
   padding: 30px 0 30px 30px;
 }
 .card:nth-child(even) {
   padding: 30px 30px 30px 0;
 }
-
-/* Active State when Visible on Scroll */
-.card.active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+/* Global ::before */
+.card::before {
+  content: "";
+  position: absolute;
+  width: 50%;
+  border: solid orangered;
 }
 
-/* Card Hover Effect */
-.card:hover {
-  background: var(--card-hover-bg);
-  cursor: pointer;
+/* Setting the border of top, bottom, left */
+.card:nth-child(odd)::before {
+  left: 0px;
+  top: -4.5px;
+  bottom: -4.5px;
+  border-width: 5px 0 5px 5px;
+  border-radius: 50px 0 0 50px;
 }
 
-/* Card Info */
+/* Setting the top and bottom to "-5px" because earlier it was out of a pixel in mobile devices */
+@media only screen and (max-width: 400px) {
+  .card:nth-child(odd)::before {
+    top: -5px;
+    bottom: -5px;
+  }
+}
+
+/* Setting the border of top, bottom, right */
+.card:nth-child(even)::before {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-width: 5px 5px 5px 0;
+  border-radius: 0 50px 50px 0;
+}
+
+/* Removing the border if it is the first card */
+.card:first-child::before {
+  border-top: 0;
+  border-top-left-radius: 0;
+}
+
+/* Removing the border if it is the last card and it's odd */
+.card:last-child:nth-child(odd)::before {
+  border-bottom: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Removing the border if it is the last card and it's even */
+.card:last-child:nth-child(even)::before {
+  border-bottom: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Information about the timeline */
 .info {
+  display: flex;
+  flex-direction: column;
+  background: #333;
   color: gray;
+  border-radius: 10px;
+  padding: 10px;
 }
 
+/* Title of the card */
 .title {
-  color: var(--highlight-color);
-  margin-bottom: 10px;
+  color: orangered;
+  position: relative;
 }
 
-/* Additional Styles */
-.card.active .info {
-  color: white;
+/* Timeline dot */
+.title::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 999px;
+  border: 3px solid orangered;
+}
+
+/* text right if the card is even */
+.card:nth-child(even) > .info > .title {
+  text-align: right;
+}
+
+/* setting dot to the left if the card is odd */
+.card:nth-child(odd) > .info > .title::before {
+  left: -45px;
+}
+
+/* setting dot to the right if the card is odd */
+.card:nth-child(even) > .info > .title::before {
+  right: -45px;
 }
